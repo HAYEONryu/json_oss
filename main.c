@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#define TOKEN_COUNT 1024
 //#include <json/json.h>
 //#include "parson.h"
 
@@ -76,7 +77,7 @@ void parse(char *text, int size, JSON *json) {
 
                 int stringLength = end - start;
 
-                json->tokens[tokenIndex].type = TOKEN_STRING;
+                json->tokens[tokenIndex].type = STRING;
                 json->tokens[tokenIndex].string = malloc(stringLength + 1);
                 memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
 
@@ -88,8 +89,41 @@ void parse(char *text, int size, JSON *json) {
             }
             break;
 
+            case '{':
+            {
+                json->tokens[tokenIndex].type = OBJECT;
+                /*json->tokens[tokenIndex].string = malloc(stringLength + 1);
+                memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
+                memcpy(json->tokens[tokenIndex].string, start, stringLength);*/
+                position++;
+
+                while(text[position] != '}')
+                {
+                    if(text[position] == '"') {
+                        char *start = text + position + 1;
+                        char *end = strchr(start, '"');
+                        if(end == NULL)
+                            break;
+                        int stringLength = end - start;
+                        
+                        json->tokens[tokenIndex].type = STRING;
+                        json->tokens[tokenIndex].string = malloc(stringLength + 1);
+                        memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
+                        memcpy(json->tokens[tokenIndex].string, start, stringLength);
+                        tokenIndex++;
+
+                        position = position + stringLength + 1;
+                    }
+                    position++;
+                }
+            }
+
             case '[':
             {
+                json->tokens[tokenIndex].type = ARRAY;
+                /*json->tokens[tokenIndex].string = malloc(stringLength + 1);
+                memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
+                memcpy(json->tokens[tokenIndex].string, start, stringLength);*/
                 position++;
 
                 while(text[position] != ']')
@@ -102,11 +136,10 @@ void parse(char *text, int size, JSON *json) {
                         }
                         int stringLength = end - start;
 
-                        json->tokens[tokenIndex].type = TOKEN_STRING;
+                        json->tokens[tokenIndex].type = STRING;
                         json->tokens[tokenIndex].string = malloc(stringLength + 1);
                         json->tokens[tokenIndex].isArray = true;
                         memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
-
                         memcpy(json->tokens[tokenIndex].string, start, stringLength);
                         tokenIndex++;
 
@@ -131,9 +164,10 @@ void parse(char *text, int size, JSON *json) {
                         break;
                 }
                 int stringLenth = end - start;
-                bugger = malloc(stringLenth + 1);
+                buffer = malloc(stringLenth + 1);
                 memset(buffer, 0, stringLenth + 1);
 
+                json->tokens[tokenIndex].type = PRIMITIVE;
                 json->tokens[tokenIndex].number = atof(buffer);
                 free(buffer);
                 tokenIndex++;
@@ -147,7 +181,7 @@ void parse(char *text, int size, JSON *json) {
 
 void free(JSON *json) {
     for(int i = 0; i < TOKEN_COUNT; i++) {
-        if (json->tokens[i].type == TOKEN_STRING)
+        if (json->tokens[i].type == STRING)
             free(json->tokens[i].string);
     }
 }
@@ -166,5 +200,5 @@ int main() {
     JSON json = {0, };
     parse(text, size, &json);
     
-
+    return 0;
 }
