@@ -3,7 +3,7 @@
 //#include <json/json.h>
 //#include "parson.h"
 
-void main() {
+int main() {
     
     int size;
 
