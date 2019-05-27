@@ -7,6 +7,7 @@ void parser(char *text, int size, JSON *json) {
     int position = 0; 
     int countrange = 0;
     int numberoftoken = 0;
+
     {
         /* data */
     };
@@ -131,10 +132,11 @@ void parser(char *text, int size, JSON *json) {
 
     }
 }
-
+/*
 void free(JSON *json) {
     for(int i = 0; i < TOKEN_COUNT; i++) {
         if (json->tokens[i].type == STRING)
             free(json->tokens[i].string);
     }
 }
+*/
