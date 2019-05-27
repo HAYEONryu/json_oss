@@ -16,6 +16,7 @@ typedef struct {
     int start;
     int end;
     int size;
+    type_t type;
 } tok_t;
 
 typedef struct {
