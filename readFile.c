@@ -12,13 +12,15 @@ char *readFile(char *filename, int *readSize) { //read file
     }
 
     int size;
-    char *buffer[size];
+    
 
     //size of file
     fseek(fp, 0, SEEK_END);
     size = ftell(fp);
     fseek(fp, 0, SEEK_SET);
-
+    
+    char *buffer[size];
+    
     //buffer = (char*)malloc(sizeof(char)*size);
     //buffer = (char*)malloc(size + 1);
     memset(buffer, 0, size + 1);

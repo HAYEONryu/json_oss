@@ -5,24 +5,18 @@
 
 int main() {
     
-    int size;
+    int* size;
+    int size1 = 0;
 
     //char *text = readFile("", &size);
 
     /*for(int i = 0; i < size; i++) {
         json->buffer[i];
     }*/
-    char text = " {
-    "Espresso":
-    {
-        "Cappucino" : "5.0",
-        "Cafe latte" : "4.2",
-        "Americano" : "3.5",
-        "Mocha" : "3.0",
-        "Macchiato" : "5.0",
-        "Hot chocolate" : "3.0"
-    }, }";
-    size = text.length();
+    char* text ;
+    text = readFile("munu.json", &size );
+
+    //size1 = text.length();
     
     JSON json = {0, };
     parser(text, size, &json);
