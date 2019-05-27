@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#define TOKEN_COUNT 1024
+#define MAXTOKEN 1024
 typedef enum {
     UNDEFINED = 0,
     OBJECT = 1,
@@ -15,14 +15,17 @@ typedef struct {
     type_t type;
     int start;
     int end;
+    int stringLength;
     int size;
+
+
 } tok_t;
 
 typedef struct {
-    tok_t tokens[TOKEN_COUNT];
+    tok_t tokens[MAXTOKEN];
 }JSON;
 
 
 char *readFile(char *filename, int *readSize);
-void parse(char *text, int size, JSON *json);
+void parser(char *text, int size, JSON *json);
 //void free(JSON *json);

@@ -7,6 +7,8 @@ void parser(char *text, int size, JSON *json) {
     int position = 0; 
     int countrange = 0;
     int numberoftoken = 0;
+    int forsize = 0;
+    int i = 0;
 
     {
         /* data */
@@ -28,49 +30,25 @@ void parser(char *text, int size, JSON *json) {
                 if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
                     break;
 
-                int stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
-/*
-                json->tokens[tokenIndex].type = STRING;
-                json->tokens[tokenIndex].string = malloc(stringLength + 1);
-                memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
+                json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
 
-                memcpy(json->tokens[tokenIndex].string, start, stringLength);
-
-                tokenIndex++;
-
-                position = position + stringLength + 1;
-                */
             }
             break;
 
             case '{':
             {
                 json->tokens[numberoftoken].type = OBJECT;
-                /*json->tokens[tokenIndex].string = malloc(stringLength + 1);
-                memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
-                memcpy(json->tokens[tokenIndex].string, start, stringLength);*/
+
                 position++;
                json->tokens[numberoftoken].start = position + 1; //where to start after "
 
-                int stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
+                json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
                 while(text[position] != '}')
                     position++;    
                 json->tokens[numberoftoken].end = position;
                 if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
                     break;
-                        /*
-                        json->tokens[tokenIndex].type = STRING;
-                        json->tokens[tokenIndex].string = malloc(stringLength + 1);
-                        memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
-                        memcpy(json->tokens[tokenIndex].string, start, stringLength);
-                        tokenIndex++;
-
-                        position = position + stringLength + 1;
-                    }
-                    position++;
-      
-                }
-                              */
+                       
             }
             break;
 
@@ -85,20 +63,8 @@ void parser(char *text, int size, JSON *json) {
                 if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
                     break;
 
-                int stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
-/*
+                json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
 
-                        json->tokens[tokenIndex].type = STRING;
-                        json->tokens[tokenIndex].string = malloc(stringLength + 1);
-                        json->tokens[tokenIndex].isArray = true;
-                        memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
-                        memcpy(json->tokens[tokenIndex].string, start, stringLength);
-                        tokenIndex++;
-
-                        position = position + stringLength + 1;
-                    }
-                    position++;
-                }*/
             }
             break;
 
@@ -114,29 +80,25 @@ void parser(char *text, int size, JSON *json) {
                 if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
                     break;
 
-                int stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
-/*
-                char *buffer;
+                json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
 
-                buffer = malloc(stringLenth + 1);
-                memset(buffer, 0, stringLenth + 1);
-
-                json->tokens[tokenIndex].number = atof(buffer);
-                free(buffer);
-                tokenIndex++;
-                position = position + stringLenth + 1; */
             }
             break;
         }
-        numberoftoken++;
+        i = position;
+        if(  text[i] == ':'){
+            i = i+1;
+            while ( text[i] != ':'){
+                if(text[i] == ',')
+                    forsize++;
+                i++;
 
+            }
+        }
+
+        json->tokens[numberoftoken].size = forsize;
+        forsize = 0;
+        numberoftoken++;
+        
     }
 }
-/*
-void free(JSON *json) {
-    for(int i = 0; i < TOKEN_COUNT; i++) {
-        if (json->tokens[i].type == STRING)
-            free(json->tokens[i].string);
-    }
-}
-*/
