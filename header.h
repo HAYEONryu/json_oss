@@ -27,5 +27,7 @@ typedef struct {
 
 
 char *readFile(char *filename, int *readSize);
-void parser(char *text, int size, JSON *json);
+void parser(char *text, int size, JSON *json, int* howmany);
+void print(JSON *json);
+
 //void free(JSON *json);

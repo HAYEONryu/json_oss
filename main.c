@@ -14,12 +14,13 @@ int main() {
         json->buffer[i];
     }*/
     char* text ;
-    text = readFile("munu.json", &size );
+    int * howmany;
+    text = readFile("menu.json", size );
 
     //size1 = text.length();
     
     JSON json = {0, };
-    parser(text, size, &json);
-    
+    parser(text, &size, &json, &howmany );
+    print(&json);
     return 0;
 }

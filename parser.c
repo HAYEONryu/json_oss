@@ -1,7 +1,7 @@
 #include "header.h"
 #define TOKEN_COUNT 1024
 
-void parser(char *text, int size, JSON *json) {
+void parser(char *text, int size, JSON *json, int *howmanytoken) {
 
     int tokenIndex = 0;
     int position = 0; 
@@ -23,13 +23,9 @@ void parser(char *text, int size, JSON *json) {
             case '"':
             {   json->tokens[numberoftoken].type = STRING;
                 json->tokens[numberoftoken].start = position + 1; //where to start after "
-                while (text[position] != '"' )
+                while (text[position] != '"')
                     position++;    
                 json->tokens[numberoftoken].end = position;
-
-                if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
-                    break;
-
                 json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
 
             }
@@ -46,8 +42,6 @@ void parser(char *text, int size, JSON *json) {
                 while(text[position] != '}')
                     position++;    
                 json->tokens[numberoftoken].end = position;
-                if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
-                    break;
                        
             }
             break;
@@ -59,9 +53,6 @@ void parser(char *text, int size, JSON *json) {
                 while(text[position] != ']')
                     position++;    
                 json->tokens[numberoftoken].end = position;
-
-                if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
-                    break;
 
                 json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
 
@@ -76,9 +67,6 @@ void parser(char *text, int size, JSON *json) {
                 while(text[position] != ' ')
                     position++;    
                 json->tokens[numberoftoken].end = position;
-
-                if (json->tokens[numberoftoken].end == NULL) //if no " closed, wrong, break the loop 
-                    break;
 
                 json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
 
@@ -101,4 +89,5 @@ void parser(char *text, int size, JSON *json) {
         numberoftoken++;
         
     }
+    howmanytoken = numberoftoken-1;
 }
