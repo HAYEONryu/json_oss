@@ -5,16 +5,14 @@
 
 int main() {
     
-    int* size;
+    int size;
 
     char* text ;
     int howmany;
-    text = readFile("menu.json", size );
-
-    //size1 = text.length();
+    text = readFile("menu.json", &size );
     
     JSON json = {0, };
-    howmany = parser(text, &size, &json);
+    parser(text, size, &json, &howmany);
     print(text, &json, howmany);
     return 0;
 }

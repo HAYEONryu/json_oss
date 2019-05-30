@@ -19,7 +19,8 @@ char *readFile(char *filename, int *readSize) { //read file
     size = ftell(fp);
     fseek(fp, 0, SEEK_SET);
     
-    char *buffer[size];
+    char *buffer;
+    buffer = malloc (size+1);
     
     //buffer = (char*)malloc(sizeof(char)*size);
     //buffer = (char*)malloc(size + 1);
