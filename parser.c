@@ -1,7 +1,7 @@
 #include "header.h"
 #define TOKEN_COUNT 1024
 
-void parser(char *text, int size, JSON *json, int *howmanytoken) {
+int parser(char *text, int size, JSON *json) {
 
     int tokenIndex = 0;
     int position = 0; 
@@ -89,5 +89,5 @@ void parser(char *text, int size, JSON *json, int *howmanytoken) {
         numberoftoken++;
         
     }
-    howmanytoken = numberoftoken-1;
+    return (numberoftoken-1);
 }
