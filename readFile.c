@@ -5,7 +5,7 @@
 
 char *readFile(char *filename, int *readSize) { //read file
 
-    FILE *fp = fopen(filename, "file");
+    FILE *fp = fopen(filename, "r+");
 
     if (fp == NULL) {
     return NULL;
