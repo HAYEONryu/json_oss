@@ -18,7 +18,6 @@ typedef struct {
     int stringLength;
     int size;
 
-
 } tok_t;
 
 typedef struct {
@@ -28,6 +27,6 @@ typedef struct {
 
 char *readFile(char *filename, int *readSize);
 void parser(char *text, int size, JSON *json, int* howmany);
-void print(JSON *json);
+void print(char *text, JSON *json);
 
 //void free(JSON *json);

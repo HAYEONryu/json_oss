@@ -6,13 +6,7 @@
 int main() {
     
     int* size;
-    int size1 = 0;
 
-    //char *text = readFile("", &size);
-
-    /*for(int i = 0; i < size; i++) {
-        json->buffer[i];
-    }*/
     char* text ;
     int * howmany;
     text = readFile("menu.json", size );
@@ -21,6 +15,6 @@ int main() {
     
     JSON json = {0, };
     parser(text, &size, &json, &howmany );
-    print(&json);
+    print(text, &json, &howmany);
     return 0;
 }
