@@ -4,185 +4,330 @@
 void parser(char *text, int size, JSON *json, int *howmanytokens)
 {
 
-    int tokenIndex = 0;
-    int position = 0;
-    int countrange = 0;
-    int numberoftoken = 0;
-    int nametoken;
-    int linetoken;
-    int forsize = 0;
-    int i = 0;
+	int tokenIndex = 0;
+	int position = 0;
+	int countrange = 0;
+	int numberoftoken = 0;
+	int nametoken;
+	int linetoken;
+	int forsize = 0;
+	int posOfNameToken = 0;
+	int i = 0;
 
-    {
-        /* data */
-    };
+	if (text[position] != '{')
+	{
+		return;
+	} //check it is started properly
 
-    if (text[position] == '{')
-    {
-        //json->tokens[0] is the most outter token
-        json->tokens[numberoftoken].type = OBJECT;
-        json->tokens[numberoftoken].start = position + 1;
-        position++;
-        numberoftoken++;
-    }
-    else
-    {
-        return;
-    } //check it is started properly
+	while (position < size)
+	{
+		// NAME token
+		if (text[position] == '"')
+		{
+			parser_nameToken(text, json, &position, &numberoftoken, &posOfNameToken);
+		}
 
-    while (position < size)
-    {
-        if (text[position] == '"')
-        {
-            //line token
-            json->tokens[numberoftoken].type = OBJECT;
-            json->tokens[numberoftoken].start = position + 1;
-            linetoken = numberoftoken;
-            numberoftoken++;
-            position++;
+		// VALUE token
+		if (text[position] == ':')
+		{
+			position++;
+			parser_valueToken(text, json, &position, &numberoftoken, &posOfNameToken);
+		}
 
-            // name token
-            json->tokens[numberoftoken].type = STRING;
-            json->tokens[numberoftoken].start = position + 1;
-            numberoftoken++;
-            position++;
-            for (; text[position] = '"'; position++)
-            {
-            }
-            if (text[position] = '"')
-            {
-                json->tokens[numberoftoken].end = position;
-                json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start + 1;
-            }
-        }
-        if (text[position] == ':')
-        {
-            while (position < size)
-            { // until end of value and line
+		position++;
+	}
 
-                //value token
-                nametoken = numberoftoken;
-                numberoftoken++;
-                valrecur(text, &json, size, &position, &numberoftoken);
+	/*if (text[position] != '}')
+	{
+		return;
 
-                //name token size check
-                if (text[position] = ',')
-                {
-                    json->tokens[nametoken].size++;
 
-                    //end of line
-                    if (text[position - 1] == ',' && text[position] == '\n')
-                    {
-                        //the most outter token size check
-                        json->tokens[0].size++;
-                        json->tokens[linetoken].end = position;
-                        json->tokens[linetoken].stringLength = json->tokens[linetoken].end - json->tokens[linetoken].start + 1;
-                        json->tokens[linetoken].size = json->tokens[nametoken].size + 1;
-                        break;
-                    }
-                }
+		while (position < size)
+		{ // until end of value and line
 
-                position++;
-            }
-        }
-        if (text[position] = '}')
-        {
-            json->tokens[0].end = position;
-            json->tokens[0].stringLength = json->tokens[0].end - json->tokens[0].start + 1;
-        }
-        position++;
-    }
+		//value token
+		numberoftoken++;
+		position++;
+		valrecur(text, json, size, &position, &numberoftoken);
 
-    ///////////////////////////////////////////////////////////////////
+		//name token size check
+		if (text[position] == ',')
+		{
+		json->tokens[a].size++;
+		position++;
+		}
+		//end
+		if (text[position - 1] == ',' && text[position] == '\n') {
+		break;
+		}
+		}
+	}*/
 
-    void valrecur(char *text, JSON *json, int size, int *nth, int *numberoftoken)
-    {
-        int nthtoken = *numberoftoken;
-        int position = *nth;
+	*howmanytokens = numberoftoken - 1;
+}
 
-    //value token checker
-while (position < size)
-            {
-                switch (text[position])
-                { //define type
-                case '"':
-                {
-                    json->tokens[nthtoken].type = STRING;
-                    json->tokens[nthtoken].start = position + 1; //where to start after "
-                    while (text[position] != '"')
-                        position++;
-                    json->tokens[nthtoken].end = position;
-                    json->tokens[nthtoken].stringLength = json->tokens[nthtoken].end - json->tokens[nthtoken].start;
-                }
-                break;
+///////////////////////////////////////////////////////////////////
 
-                case '{':
-                {
-                    json->tokens[nthtoken].type = OBJECT;
+void valrecur(char *text, JSON *json, int size, int *nth, int *numberoftoken) {
+	//value token checker
+	int pre=0;
 
-                    position++;
-                    json->tokens[nthtoken].start = position + 1; //where to start after "
+	for (; text[*nth] == 32; (*nth)++) ;
 
-                    json->tokens[nthtoken].stringLength = json->tokens[nthtoken].end - json->tokens[numberoftoken].start;
-                    while (text[position] != '}')
-                        position++;
-                    json->tokens[nthtoken].end = position;
-                    json->tokens[nthtoken].stringLength = json->tokens[nthtoken].end - json->tokens[nthtoken].start;
-                }
-                break;
+	switch (text[*nth])
+	{ // Start Switch
+		//define type
+	case '"':
+	{
+		json->tokens[*numberoftoken].type = STRING;
+		json->tokens[*numberoftoken].start = ++(*nth);
+		while (text[*nth] != '"')
+			(*nth)++;
+		json->tokens[*numberoftoken].end = *nth-1;
+		json->tokens[*numberoftoken].size = 0;
+		json->tokens[*numberoftoken].stringLength = json->tokens[*numberoftoken].end - json->tokens[*numberoftoken].start;
+		break;
+	}
 
-                case '[':
-                {
-                    json->tokens[numberoftoken].type = ARRAY;
-                    json->tokens[numberoftoken].start = position + 1; //where to start after "
-                    while (text[position] != ']')
-                        position++;
-                    json->tokens[numberoftoken].end = position;
+	case '{':
+	{
+		json->tokens[*numberoftoken].type = OBJECT;
+		json->tokens[*numberoftoken].start = ++(*nth);
+		
+		int objTokenIdx = *numberoftoken;
 
-                    json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
-                }
-                break;
 
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '-':
-                {
-                    json->tokens[numberoftoken].type = PRIMITIVE;
-                    json->tokens[numberoftoken].start = position; //where to start after "
-                    while (text[position] != ' ')
-                        position++;
-                    json->tokens[numberoftoken].end = position;
 
-                    json->tokens[numberoftoken].stringLength = json->tokens[numberoftoken].end - json->tokens[numberoftoken].start;
-                }
-                break;
-                }
-                i = position;
-                if (text[i] == ':')
-                {
-                    i = i + 1;
-                    while (text[i] != ':')
-                    {
-                        if (text[i] == ',')
-                            forsize++;
-                        i++;
-                    }
-                }
 
-                json->tokens[numberoftoken].size = forsize;
-                forsize = 0;
-                numberoftoken++;
-            }
-        numberoftoken--;
-        howmanytokens = &numberoftoken;
-    }
-            
+
+
+
+		while (text[*nth] != '}') {
+			if (text[*nth] == ',') {
+				json->tokens[*numberoftoken].size++;
+				pre = (*numberoftoken);
+				(*numberoftoken)++;
+				valrecur(text, json, size, nth, numberoftoken);
+			}
+			(*nth)++;
+		}
+		json->tokens[pre].end = *nth-1;
+		json->tokens[pre].stringLength = json->tokens[pre].end - json->tokens[pre].start;
+		break;
+	}
+
+	case '[':
+	{
+		json->tokens[*numberoftoken].type = ARRAY;
+		json->tokens[*numberoftoken].start = ++(*nth);
+		while (text[*nth] != ']') {
+			if (text[*nth] == ',') {
+				json->tokens[*numberoftoken].size++;
+				pre = (*numberoftoken);
+				(*numberoftoken)++;
+				valrecur(text, json, size, nth, numberoftoken);
+			}
+			(*nth)++;
+		}
+		json->tokens[pre].end = *nth-1;
+		json->tokens[pre].stringLength = json->tokens[pre].end - json->tokens[pre].start;
+		break;
+	}
+
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	case '-':
+	{
+		json->tokens[*numberoftoken].type = PRIMITIVE;
+		json->tokens[*numberoftoken].start = ++(*nth);
+		json->tokens[*numberoftoken].size = 0;
+		while (text[*nth] != ' '&& text[*nth] != '\n')
+			(*nth)++;
+		json->tokens[*numberoftoken].end = *nth;
+		json->tokens[*numberoftoken].stringLength = json->tokens[*numberoftoken].end - json->tokens[*numberoftoken].start;
+		break;
+	}
+	case '\n':
+	case '\t':
+	case ' ':
+	{
+		(*nth)++;
+		valrecur(text, json, size, nth, numberoftoken);
+		break;
+	}
+	/*
+	default:
+	{
+		json->tokens[*numberoftoken].type = UNDEFINED;
+		json->tokens[*numberoftoken].start = (*nth) + 1;
+		json->tokens[*numberoftoken].size = 0;
+		while (!(text[*nth - 1] == ',' && text[*nth] == '\n')) {
+			(*nth)++;
+		}
+		json->tokens[*numberoftoken].end = *nth;
+		json->tokens[*numberoftoken].stringLength = json->tokens[*numberoftoken].end - json->tokens[*numberoftoken].start;
+
+		break;
+	}
+	*/
+	} // End Switch
+
+	(*nth)++;
+	(*numberoftoken)++;
+}
+
+
+void parser_nameToken(char* text, JSON* json, int* nth, int* numberoftoken, int* pos) {
+
+	// name token
+	json->tokens[*numberoftoken].type = STRING;
+	json->tokens[*numberoftoken].start = ++(*nth);
+	*pos = *numberoftoken;
+	
+
+	// find end of name token
+	for (; text[(*nth)] != '"'; (*nth)++);
+
+	json->tokens[*numberoftoken].end = (*nth) - 1;
+	json->tokens[*numberoftoken].stringLength = json->tokens[*numberoftoken].end - json->tokens[*numberoftoken].start + 1;
+	json->tokens[*numberoftoken].value = malloc(sizeof(char) * json->tokens[*numberoftoken].stringLength + 1);
+
+	memset(json->tokens[*numberoftoken].value, '\0', json->tokens[*numberoftoken].stringLength+1);
+	memcpy(json->tokens[*numberoftoken].value, &(text[json->tokens[*numberoftoken].start]), json->tokens[*numberoftoken].stringLength);
+
+	(*nth)++;
+	(*numberoftoken)++;
+}
+
+void parser_valueToken(char* text, JSON* json, int* nth, int* numberoftoken, int* pos) {
+	// erase white space
+	for (; text[*nth] == 32; (*nth)++);
+
+	switch (text[*nth])
+	{ // Start Switch
+	  //define type
+	case '"':
+		// STRING
+		parser_valueToken_STRING(text, json, nth, numberoftoken);
+		json->tokens[*pos].size++;
+		break;
+	case '{':
+		// OBJECT
+		parser_valueToken_OBJECT(text, json, nth, numberoftoken, pos);
+		json->tokens[*pos].size++;
+		break;
+	case '[':
+		// ARRAY
+		//parser_valueToken_ARRAY(text, json, nth, numberoftoken, pos);
+		json->tokens[*pos].size++;
+		break;
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	case '-':
+		// PRIMITIVE
+		parser_valueToken_PRIMITIVE(text, json, nth, numberoftoken);
+		json->tokens[*pos].size++;
+		break;
+
+	} // End Switch
+
+	//(*numberoftoken)++;
+}
+
+void parser_valueToken_STRING(char* text, JSON* json, int* nth, int* numberoftoken) {
+	// name token
+	json->tokens[*numberoftoken].type = STRING;
+	json->tokens[*numberoftoken].start = ++(*nth);
+
+	// find end of name token
+	for (; text[(*nth)] != '"'; (*nth)++);
+
+	json->tokens[*numberoftoken].end = (*nth) - 1;
+	json->tokens[*numberoftoken].stringLength = json->tokens[*numberoftoken].end - json->tokens[*numberoftoken].start + 1;
+	json->tokens[*numberoftoken].value = malloc(sizeof(char) * json->tokens[*numberoftoken].stringLength + 1);
+
+	memset(json->tokens[*numberoftoken].value, '\0', json->tokens[*numberoftoken].stringLength + 1);
+	memcpy(json->tokens[*numberoftoken].value, &(text[json->tokens[*numberoftoken].start]), json->tokens[*numberoftoken].stringLength);
+
+	(*nth)++;
+	(*numberoftoken)++;
+}
+
+void parser_valueToken_OBJECT(char* text, JSON* json, int* nth, int* numberoftoken, int* pos) {
+	int cnt = 0;
+
+	json->tokens[*numberoftoken].type = OBJECT;
+	json->tokens[*numberoftoken].start = ++(*nth);
+
+
+	
+	for (; text[(*nth)] != '}'; (*nth)++) {
+		if (text[(*nth)] == '"')
+		{
+			parser_nameToken(text, json, nth, numberoftoken, pos);
+		}
+
+		// VALUE token
+		if (text[(*nth)] == ':')
+		{
+			(*nth)++;
+			parser_valueToken(text, json, nth, numberoftoken, pos);
+		}
+	}
+
+
+
+
+	json->tokens[*numberoftoken].end = (*nth) - 1;
+	json->tokens[*numberoftoken].stringLength = json->tokens[*numberoftoken].end - json->tokens[*numberoftoken].start + 1;
+	json->tokens[*numberoftoken].value = malloc(sizeof(char) * json->tokens[*numberoftoken].stringLength + 1);
+
+	memset(json->tokens[*numberoftoken].value, '\0', json->tokens[*numberoftoken].stringLength + 1);
+	memcpy(json->tokens[*numberoftoken].value, &(text[json->tokens[*numberoftoken].start]), json->tokens[*numberoftoken].stringLength);
+	
+	(*nth)++;
+	(*numberoftoken)++;
+}
+
+void parser_valueToken_ARRAY(char* text, JSON* json, int* nth, int* numberoftoken, int* pos) {
+	json->tokens[*numberoftoken].type = ARRAY;
+	json->tokens[*numberoftoken].start = ++(*nth);
+
+
+
+	(*nth)++;
+	(*numberoftoken)++;
+}
+
+void parser_valueToken_PRIMITIVE(char* text, JSON* json, int* nth, int* numberoftoken) {
+	json->tokens[*numberoftoken].type = PRIMITIVE;
+	json->tokens[*numberoftoken].start = (*nth)++;
+
+	for (; text[(*nth)] != ','; (*nth)++);
+
+	json->tokens[*numberoftoken].end = (*nth) - 1;
+	json->tokens[*numberoftoken].stringLength = json->tokens[*numberoftoken].end - json->tokens[*numberoftoken].start + 1;
+	json->tokens[*numberoftoken].value = malloc(sizeof(char) * json->tokens[*numberoftoken].stringLength + 1);
+
+	memset(json->tokens[*numberoftoken].value, '\0', json->tokens[*numberoftoken].stringLength + 1);
+	memcpy(json->tokens[*numberoftoken].value, &(text[json->tokens[*numberoftoken].start]), json->tokens[*numberoftoken].stringLength);
+
+	(*nth)++;
+	(*numberoftoken)++;
 }
