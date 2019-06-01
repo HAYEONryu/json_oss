@@ -28,5 +28,5 @@ typedef struct {
 char *readFile(char *filename, int *readSize);
 void parser(char *text, int size, JSON *json , int* howmanytokens);
 void print(char *text, JSON *json, int i);
-
+void valrecur(char *text, JSON *json, int size, int* nth, int* numberoftoken);
 //void free(JSON *json);
