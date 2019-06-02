@@ -3,13 +3,13 @@
 //#include <json/json.h>
 //#include "parson.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char** argv) {
     
     int size;
 
-    char *text ;
+    //char *text ;
     int howmany;
-    text = readFile(argv[1], &size );
+    char* text = readFile(argv[1], &size );
     //char* readFile(argv[1], &size);
     
     JSON json = {0, };
