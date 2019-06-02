@@ -27,7 +27,7 @@ char *readFile(char *filename, int *readSize) { //read file
     memset(buffer, 0, size + 1);
 
     //fread(buffer, 1, size, fp)
-    if (fread(buffer, size, 1, fp) < 1) {
+    if (fread(buffer, 1, size, fp) < 1) {
     *readSize = 0;
     free(buffer);
     fclose(fp);
