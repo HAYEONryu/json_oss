@@ -25,6 +25,12 @@ The program consists of a total of seven functions.
 6. Local Electoral output
 7. Overall regional winner output
 
+#Benefits of the program:
+
+1. Election information can be analyzed through low data.
+2. Access to data is easy through parser.
+3. Numerical analysis is possible, including the number of votes cast, the number of voters eligible for the election and the number of votes invalid.
+
 #How to run this program 
 1. run makefile(make) 
 2. run the main.c file 
