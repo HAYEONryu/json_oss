@@ -12,3 +12,18 @@ It get started,
 we can get name, size, range, type of TOKEN through parsing JSON file
 
 we can get more help in JSON open source in gitHub if we need.
+
+#election
+
+The program analyzes the results of South Korea's 20th general elections.
+
+The program consists of a total of seven functions. 
+1. Output full information
+2. Full Candidate Output
+3. Overall Area Output
+4. Regional Candidate Output
+5. Output local turnout
+6. Local Electoral output
+7. Overall regional winner output
+
+The json file was quoted at https://github.com/NuTheGee/NEC
